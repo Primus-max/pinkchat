@@ -1,6 +1,5 @@
-import firebase  from "firebase/app"
 import { initializeApp } from 'firebase/app';
-import 'firebase/database';
+import { getDatabase } from "firebase/database";
 
 const config = {
     // API KEY
@@ -14,4 +13,7 @@ const config = {
 
 const db = initializeApp(config);
 
-export default db;
+// Get a reference to the database service
+ const database = getDatabase(db);
+export default database
+
