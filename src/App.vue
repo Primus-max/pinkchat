@@ -4,7 +4,7 @@
             <div class="form-inner">
                 <h1>Авторизоваться</h1>
                 <label for="username">Имя пользователя</label>
-                <input v-model="inputUSerName" type="text" placeholder="Введите ваше имя..."/>
+                <input v-model="inputUSerName" type="text" placeholder="Введите ваше имя..." autofocus/>
                 <input type="submit" value="Авторизоваться"/>
             </div>
         </form>
@@ -12,15 +12,26 @@
 
     <div class="view chat" v-else>
         <header>
-            <button class="logout">Выйти</button>
+            <button class="logout" @click="Logout">Выйти</button>
             <h1>Привет {{state.username}}</h1>
         </header>
+
         <section class="chat-box">
-            // Messages
+            <div
+                    v-for="message in state.messages"
+                    :key="message.key"
+                    :class="(message.username === state.username ? 'message current-user': 'message')"
+            >
+                <div class="message-inner">
+                    <div class="username">{{ message.username }}</div>
+                    <div class="content">{{ message.content }}</div>
+                </div>
+            </div>
         </section>
+
         <footer>
             <form @submit.prevent="sendMessage">
-                <input type="text" placeholder="Есть что сказать?" v-model="inputMessage"/>
+                <input type="text" placeholder="Есть что сказать?" v-model="inputMessage" autofocus/>
                 <input type="submit" value="Send">
             </form>
         </footer>
@@ -30,7 +41,7 @@
 
 <script>
 
-    import database from './db'
+    import db from './db'
     import {reactive, onMounted, ref} from "vue";
 
     export default {
@@ -51,9 +62,12 @@
                 }
             }
 
+            const Logout =()=>{
+                state.username = ''
+            }
+
             const sendMessage = () => {
-                console.log(typeof database)
-                // const messagesRef = database().ref("messages")
+                const messagesRef = db.database().ref("messages")
 
                 if (!inputMessage.value) {
                     return
@@ -65,12 +79,32 @@
 
                 }
 
-                // messagesRef.push(message)
+                messagesRef.push(message)
                 inputMessage.value = ''
             }
 
+            onMounted(() => {
+                const messagesRef = db.database().ref("messages")
 
-            return {inputUSerName, Login, state, inputMessage, sendMessage}
+                messagesRef.on('value', snapshot => {
+                    const data = snapshot.val()
+                    let messages = []
+
+                    if (data) {
+                        Object.keys(data).forEach(key => {
+                            messages.push({
+                                id: key,
+                                username: data[key].username,
+                                content: data[key].content
+                            })
+                        })
+                    }
+                    state.messages = messages
+                })
+            })
+
+
+            return {inputUSerName, Login, state, inputMessage, sendMessage, Logout}
         }
 
     }

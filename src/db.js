@@ -1,19 +1,17 @@
-import { initializeApp } from 'firebase/app';
-import { getDatabase } from "firebase/database";
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/database'
 
 const config = {
     // API KEY
-    apiKey: "AIzaSyASIBx_e6xrEayoAz0GJaKlO4h5KjcR4KM",
-    authDomain: "pinkchatvue.firebaseapp.com",
-    projectId: "pinkchatvue",
-    storageBucket: "pinkchatvue.appspot.com",
-    messagingSenderId: "877642650425",
-    appId: "1:877642650425:web:dc72d6c06fb762e3c78ee8"
+    apiKey: "AIzaSyDHdL8NVWv_1Cq2Lv1OUkhQs1GujmZf2SQ",
+    authDomain: "pinkchat-1586c.firebaseapp.com",
+    projectId: "pinkchat-1586c",
+    storageBucket: "pinkchat-1586c.appspot.com",
+    messagingSenderId: "1026282391388",
+    appId: "1:1026282391388:web:25fb738676b1913d54a399"
 }
 
-const db = initializeApp(config);
+const db = firebase.initializeApp(config)
 
-// Get a reference to the database service
- const database = getDatabase(db);
-export default database
+export default db
 
